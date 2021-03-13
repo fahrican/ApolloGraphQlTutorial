@@ -1,6 +1,13 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
-    ext.kotlin_version = "1.4.31"
+    ext {
+        kotlin_version = "1.4.31"
+        apollo_version = "2.5.4"
+        hilt_version = "2.31.2-alpha"
+        hilt_compiler_version = '1.0.0-alpha03'
+        legacy_support_v4_version = '1.0.0'
+        fragment_component_version = "2.3.3"
+    }
     repositories {
         google()
         jcenter()
@@ -8,9 +15,8 @@ buildscript {
     dependencies {
         classpath "com.android.tools.build:gradle:4.1.2"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
+        classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$fragment_component_version"
+        classpath "com.google.dagger:hilt-android-gradle-plugin:$hilt_version"
     }
 }
 
