@@ -1,0 +1,9 @@
+query CharactersList {
+    characters {
+        results {
+            id
+            name
+            species
+        }
+    }
+}
