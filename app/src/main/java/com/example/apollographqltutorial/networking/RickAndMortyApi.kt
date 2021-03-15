@@ -4,7 +4,7 @@ import android.os.Looper
 import com.apollographql.apollo.ApolloClient
 import okhttp3.OkHttpClient
 
-class GraphQlClient {
+class RickAndMortyApi {
 
     fun getApolloClient(): ApolloClient {
         check(Looper.myLooper() == Looper.getMainLooper()) {
