@@ -1,4 +1,4 @@
-package com.example.apollographqltutorial
+package com.example.apollographqltutorial.view.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
