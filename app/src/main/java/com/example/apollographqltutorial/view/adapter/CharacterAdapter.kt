@@ -14,6 +14,8 @@ import com.example.apollographqltutorial.databinding.ItemCharacterBinding
 class CharacterAdapter :
     ListAdapter<CharactersListQuery.Result, CharacterViewHolder>(CharacterDiffUtil()) {
 
+    var onItemClicked: ((CharactersListQuery.Result) -> Unit)? = null
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CharacterViewHolder {
         val binding: ItemCharacterBinding = DataBindingUtil.inflate(
             LayoutInflater.from(parent.context),
@@ -26,6 +28,12 @@ class CharacterAdapter :
 
     override fun onBindViewHolder(holder: CharacterViewHolder, position: Int) {
         holder.binding.character = getItem(position)
+
+        val character = getItem(position)
+        holder.binding.root.setOnClickListener {
+            onItemClicked?.invoke(character)
+        }
+
     }
 
 }
