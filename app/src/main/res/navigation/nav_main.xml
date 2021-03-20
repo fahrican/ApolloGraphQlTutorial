@@ -9,6 +9,24 @@
         android:id="@+id/characters_list_fragment"
         android:name="com.example.apollographqltutorial.view.ui.CharactersListFragment"
         android:label="List of all characters"
-        tools:layout="@layout/fragment_characters_list" />
+        tools:layout="@layout/fragment_characters_list">
+
+        <action
+            android:id="@+id/navigate_to_character_fragment"
+            app:destination="@id/character_fragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/character_fragment"
+        android:name="com.example.apollographqltutorial.view.ui.CreateDetailsFragment"
+        android:label="Character Details"
+        tools:layout="@layout/fragment_character_details">
+
+        <argument
+            android:name="id"
+            app:argType="string" />
+
+    </fragment>
 
 </navigation>
