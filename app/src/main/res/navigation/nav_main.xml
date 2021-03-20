@@ -12,7 +12,7 @@
         tools:layout="@layout/fragment_characters_list">
 
         <action
-            android:id="@+id/navigate_to_character_fragment"
+            android:id="@+id/navigate_to_character_details_fragment"
             app:destination="@id/character_details_fragment" />
 
     </fragment>
