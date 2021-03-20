@@ -13,13 +13,13 @@
 
         <action
             android:id="@+id/navigate_to_character_fragment"
-            app:destination="@id/character_fragment" />
+            app:destination="@id/character_details_fragment" />
 
     </fragment>
 
     <fragment
-        android:id="@+id/character_fragment"
-        android:name="com.example.apollographqltutorial.view.ui.CreateDetailsFragment"
+        android:id="@+id/character_details_fragment"
+        android:name="com.example.apollographqltutorial.view.ui.CharacterDetailsFragment"
         android:label="Character Details"
         tools:layout="@layout/fragment_character_details">
 
