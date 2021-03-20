@@ -2,10 +2,13 @@ package com.example.apollographqltutorial.view.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
+import androidx.databinding.BindingAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
 import com.example.apollographqltutorial.CharactersListQuery
 import com.example.apollographqltutorial.R
 import com.example.apollographqltutorial.databinding.ItemCharacterBinding
@@ -56,4 +59,9 @@ class CharacterDiffUtil : DiffUtil.ItemCallback<CharactersListQuery.Result>() {
         return oldItem == newItem
     }
 
+}
+
+@BindingAdapter("imageUrl")
+fun setImageUrl(imageView: ImageView, url: String?) {
+    imageView.load(url) { crossfade(true) }
 }
