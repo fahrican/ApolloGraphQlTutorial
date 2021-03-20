@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.example.apollographqltutorial.databinding.FragmentCharactersListBinding
 import com.example.apollographqltutorial.view.adapter.CharacterAdapter
 import com.example.apollographqltutorial.view.state.ViewState
@@ -37,6 +38,18 @@ class CharactersListFragment : Fragment() {
         binding.charactersRv.adapter = characterAdapter
         viewModel.queryCharactersList()
         observeLiveData()
+
+        characterAdapter.onItemClicked = { character ->
+            character.let {
+                if (!character.id.isNullOrBlank()) {
+                    findNavController().navigate(
+                        CharactersListFragmentDirections.navigateToCharacterDetailsFragment(
+                            id = character.id
+                        )
+                    )
+                }
+            }
+        }
     }
 
     private fun observeLiveData() {
