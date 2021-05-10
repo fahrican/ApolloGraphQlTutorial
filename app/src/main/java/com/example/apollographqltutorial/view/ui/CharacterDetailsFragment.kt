@@ -46,11 +46,11 @@ class CharacterDetailsFragment : Fragment() {
                     binding.characterDetailsNotFound.visibility = View.GONE
                 }
                 is ViewState.Success -> {
-                    if (response.data.data == null) {
+                    if (response.result.data == null) {
                         binding.characterDetailsFetchProgress.visibility = View.GONE
                         binding.characterDetailsNotFound.visibility = View.VISIBLE
                     } else {
-                        binding.query = response.data.data
+                        binding.query = response.result.data
                         binding.characterDetailsFetchProgress.visibility = View.GONE
                         binding.characterDetailsNotFound.visibility = View.GONE
                     }
