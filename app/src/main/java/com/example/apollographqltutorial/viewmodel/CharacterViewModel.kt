@@ -51,38 +51,15 @@ class CharacterViewModel @Inject constructor(
         }
     }
 
-    /*fun queryCharacter(id: String) = viewModelScope.launch {
-        _character.postValue(ViewState.Loading())
+    fun queryCharacter(id: String) = viewModelScope.launch {
+        _character.postValue(ViewState.Loading)
         try {
             val response = repository.queryCharacter(id)
             _character.postValue(ViewState.Success(response))
         } catch (ae: ApolloException) {
             Log.d("ApolloException", "Failure", ae)
-            _character.postValue(ViewState.Error("Error fetching characters"))
-        }
-    }*/
-
-    /*
-    fun fetchPosts() {
-        _posts.postValue(ResultState.InProgress)
-
-        viewModelScope.launch {
-            val response = repository.getPosts()
-            response.let { postList ->
-                when (postList) {
-                    is ResultState.Success<*> -> {
-                        val posts = (postList.extractData as ArrayList<PostsItem>)
-                        _posts.postValue(ResultState.Success(posts))
-                        Log.d("fetchPosts()", "response: ${response}")
-                    }
-                    else -> {
-                        _posts.postValue(postList)
-                        Log.e("fetchPosts()", "catch block")
-                    }
-                }
-            }
+            _character.postValue(ViewState.Error(ApolloException("queryCharacter()")))
         }
     }
-     */
 
 }
