@@ -1,10 +1,15 @@
 package com.example.apollographqltutorial.view.state
 
-sealed class ViewState<T>(
-    val value: T? = null,
-    val message: String? = null
-) {
-    class Success<T>(data: T) : ViewState<T>(data)
-    class Error<T>(message: String?, data: T? = null) : ViewState<T>(data, message)
-    class Loading<T> : ViewState<T>()
+sealed class ViewState<out T : Any> {
+
+    data class Success<out T : Any>(val data: T) : ViewState<T>()
+    data class Error(val exception: Exception) : ViewState<Nothing>()
+    object Loading : ViewState<Nothing>()
+
+    val extractData: T?
+        get() = when (this) {
+            is Success -> data
+            is Error -> null
+            is Loading -> null
+        }
 }

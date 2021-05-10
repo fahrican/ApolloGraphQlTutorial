@@ -60,7 +60,7 @@ class CharactersListFragment : Fragment() {
                     binding.charactersFetchProgress.visibility = View.VISIBLE
                 }
                 is ViewState.Success -> {
-                    if (response.value?.data?.characters?.results?.size == 0) {
+                    if (response.data.characters?.results?.size == 0) {
                         characterAdapter.submitList(emptyList())
                         binding.charactersFetchProgress.visibility = View.GONE
                         binding.charactersRv.visibility = View.GONE
@@ -69,7 +69,7 @@ class CharactersListFragment : Fragment() {
                         binding.charactersRv.visibility = View.VISIBLE
                         binding.charactersEmptyText.visibility = View.GONE
                     }
-                    val results = response.value?.data?.characters?.results
+                    val results = response.data.characters?.results
                     characterAdapter.submitList(results)
                     binding.charactersFetchProgress.visibility = View.GONE
                 }
