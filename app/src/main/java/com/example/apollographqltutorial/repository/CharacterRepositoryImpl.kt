@@ -1,23 +1,23 @@
 package com.example.apollographqltutorial.repository
 
 import android.util.Log
+import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.Response
 import com.apollographql.apollo.coroutines.await
 import com.apollographql.apollo.exception.ApolloException
 import com.example.apollographqltutorial.CharacterQuery
 import com.example.apollographqltutorial.CharactersListQuery
-import com.example.apollographqltutorial.networking.RickAndMortyApi
 import com.example.apollographqltutorial.view.state.ViewState
 import javax.inject.Inject
 
 class CharacterRepositoryImpl @Inject constructor(
-    private val webService: RickAndMortyApi
+    private val webService: ApolloClient
 ) : BaseRepository() {
 
     override suspend fun queryCharactersList(): ViewState<CharactersListQuery.Data>? {
         var result: ViewState<CharactersListQuery.Data>? = null
         try {
-            val response = webService.getApolloClient().query(CharactersListQuery()).await()
+            val response = webService.query(CharactersListQuery()).await()
             response.let {
                 it.data?.let { data -> result = handleSuccess(data) }
             }
@@ -29,6 +29,6 @@ class CharacterRepositoryImpl @Inject constructor(
     }
 
     override suspend fun queryCharacter(id: String): Response<CharacterQuery.Data> {
-        return webService.getApolloClient().query(CharacterQuery(id)).await()
+        return webService.query(CharacterQuery(id)).await()
     }
 }

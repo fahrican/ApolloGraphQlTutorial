@@ -1,0 +1,108 @@
+{
+  "data": {
+    "characters": {
+      "results": [
+        {
+          "id": "1",
+          "name": "Rick Sanchez",
+          "species": "Human"
+        },
+        {
+          "id": "2",
+          "name": "Morty Smith",
+          "species": "Human"
+        },
+        {
+          "id": "3",
+          "name": "Summer Smith",
+          "species": "Human"
+        },
+        {
+          "id": "4",
+          "name": "Beth Smith",
+          "species": "Human"
+        },
+        {
+          "id": "5",
+          "name": "Jerry Smith",
+          "species": "Human"
+        },
+        {
+          "id": "6",
+          "name": "Abadango Cluster Princess",
+          "species": "Alien"
+        },
+        {
+          "id": "7",
+          "name": "Abradolf Lincler",
+          "species": "Human"
+        },
+        {
+          "id": "8",
+          "name": "Adjudicator Rick",
+          "species": "Human"
+        },
+        {
+          "id": "9",
+          "name": "Agency Director",
+          "species": "Human"
+        },
+        {
+          "id": "10",
+          "name": "Alan Rails",
+          "species": "Human"
+        },
+        {
+          "id": "11",
+          "name": "Albert Einstein",
+          "species": "Human"
+        },
+        {
+          "id": "12",
+          "name": "Alexander",
+          "species": "Human"
+        },
+        {
+          "id": "13",
+          "name": "Alien Googah",
+          "species": "Alien"
+        },
+        {
+          "id": "14",
+          "name": "Alien Morty",
+          "species": "Alien"
+        },
+        {
+          "id": "15",
+          "name": "Alien Rick",
+          "species": "Alien"
+        },
+        {
+          "id": "16",
+          "name": "Amish Cyborg",
+          "species": "Alien"
+        },
+        {
+          "id": "17",
+          "name": "Annie",
+          "species": "Human"
+        },
+        {
+          "id": "18",
+          "name": "Antenna Morty",
+          "species": "Human"
+        },
+        {
+          "id": "19",
+          "name": "Antenna Rick",
+          "species": "Human"
+        },
+        {
+          "id": "20",
+          "name": "Ants in my Eyes Johnson",
+          "species": "Human"
+        }
+      ]
+    }
+  }
+}

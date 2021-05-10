@@ -1,5 +1,6 @@
 package com.example.apollographqltutorial.di
 
+import com.apollographql.apollo.ApolloClient
 import com.example.apollographqltutorial.networking.RickAndMortyApi
 import dagger.Module
 import dagger.Provides
@@ -14,6 +15,6 @@ object RepoModule {
 
     @Singleton
     @Provides
-    fun provideWebService() = RickAndMortyApi()
+    fun provideWebService(): ApolloClient = RickAndMortyApi.getApolloClient()
 
 }
