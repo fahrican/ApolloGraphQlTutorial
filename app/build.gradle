@@ -75,6 +75,9 @@ dependencies {
     kapt "com.google.dagger:hilt-compiler:$hilt_version"
     implementation "androidx.hilt:hilt-lifecycle-viewmodel:$hilt_compiler_version"
 
+    // Gson
+    implementation 'com.google.code.gson:gson:2.8.6'
+
     // Unit Testing
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'com.squareup.okhttp3:mockwebserver:4.4.0'
