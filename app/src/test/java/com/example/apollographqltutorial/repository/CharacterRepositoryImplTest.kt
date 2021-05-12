@@ -1,6 +1,7 @@
 package com.example.apollographqltutorial.repository
 
 import com.example.apollographqltutorial.CharactersListQuery
+import com.example.apollographqltutorial.repository.BaseRepository.Companion.SOMETHING_WRONG
 import com.example.apollographqltutorial.view.state.ViewState
 import io.mockk.*
 import io.mockk.impl.annotations.RelaxedMockK
@@ -29,7 +30,7 @@ class CharacterRepositoryImplTest {
     }
 
     @Test
-    fun `given expected success response check if true`() {
+    fun `given expected success response check if it matches with actual result`() {
         val expectedSuccess = ViewState.Success(mockData)
 
         runBlocking {
@@ -40,6 +41,21 @@ class CharacterRepositoryImplTest {
             coVerify { objectUnderTest.queryCharactersList() }
 
             assertEquals(expectedSuccess, actualResult)
+        }
+    }
+
+    @Test
+    fun `given expected error response check if it matches with actual result`() {
+        val expectedError = ViewState.Error(Exception(SOMETHING_WRONG))
+
+        runBlocking {
+            coEvery { objectUnderTest.queryCharactersList() } returns expectedError
+
+            val actualResult = objectUnderTest.queryCharactersList()
+
+            coVerify { objectUnderTest.queryCharactersList() }
+
+            assertEquals(expectedError, actualResult)
         }
     }
 
