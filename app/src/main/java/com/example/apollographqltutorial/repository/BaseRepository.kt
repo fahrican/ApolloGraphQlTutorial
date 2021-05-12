@@ -1,6 +1,5 @@
 package com.example.apollographqltutorial.repository
 
-import com.example.apollographqltutorial.CharactersListQuery
 import com.example.apollographqltutorial.view.state.ViewState
 
 
