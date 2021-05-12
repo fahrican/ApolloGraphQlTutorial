@@ -1,11 +1,21 @@
 package com.example.apollographqltutorial.repository
 
+import com.apollographql.apollo.ApolloCall
 import com.apollographql.apollo.ApolloClient
+import com.apollographql.apollo.ApolloQueryCall
+import com.apollographql.apollo.api.Response
+import com.apollographql.apollo.exception.ApolloException
+import com.example.apollographqltutorial.CharactersListQuery
 import com.example.apollographqltutorial.MainCoroutineRule
 import com.example.apollographqltutorial.repository.BaseRepository.Companion.GENERAL_ERROR_CODE
 import com.example.apollographqltutorial.repository.BaseRepository.Companion.SOMETHING_WRONG
 import com.example.apollographqltutorial.util.ResponseFileReader
 import com.example.apollographqltutorial.view.state.ViewState
+import com.google.gson.Gson
+import io.mockk.MockKAnnotations
+import io.mockk.coEvery
+import io.mockk.impl.annotations.RelaxedMockK
+import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import okhttp3.mockwebserver.MockResponse
@@ -64,6 +74,37 @@ class CharacterRepositoryImplTest2 {
             val actualResult = objectUnderTest.queryCharactersList()
 
             assertEquals(expectedError::class.java, actualResult!!::class.java)
+        }
+    }
+
+    @Test
+    fun `given response cahracters list when fetching results then return success`() {
+        val reader = ResponseFileReader("characters_list_success.json")
+        val gson = Gson()
+        val expected: CharactersListQuery.Data =
+            gson.fromJson(reader.content, CharactersListQuery.Data::class.java)
+
+
+        mockWebServer.apply {
+            enqueue(
+                MockResponse().setResponseCode(200)
+                    .setBody(ResponseFileReader("characters_list_success.json").content)
+            )
+        }
+
+        runBlocking {
+
+            var actual: CharactersListQuery.Data? = null
+
+            mockApi.query(CharactersListQuery())
+                .enqueue(object : ApolloCall.Callback<CharactersListQuery.Data>() {
+                    override fun onResponse(response: Response<CharactersListQuery.Data>) {
+                        actual = response.data
+                        assertEquals(expected, actual)
+                    }
+
+                    override fun onFailure(e: ApolloException) {}
+                })
         }
     }
 }
