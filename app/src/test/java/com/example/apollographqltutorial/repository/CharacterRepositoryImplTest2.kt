@@ -74,6 +74,13 @@ class CharacterRepositoryImplTest2 {
         val expected: CharactersListQuery.Data =
             gson.fromJson(reader.content, CharactersListQuery.Data::class.java)
 
+        mockWebServer.apply {
+            enqueue(
+                MockResponse().setResponseCode(GENERAL_ERROR_CODE)
+                    .setBody(ResponseFileReader("characters_list_success.json").content)
+            )
+        }
+
         runBlocking {
 
             mockApi.query(CharactersListQuery())
