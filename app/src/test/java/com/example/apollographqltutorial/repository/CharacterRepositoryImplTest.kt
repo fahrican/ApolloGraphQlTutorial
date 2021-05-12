@@ -9,8 +9,10 @@ import com.example.apollographqltutorial.util.ResponseFileReader
 import com.example.apollographqltutorial.view.state.ViewState
 import com.google.gson.Gson
 import io.mockk.*
+import io.mockk.impl.annotations.RelaxedMockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runBlockingTest
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.After
@@ -28,97 +30,30 @@ class CharacterRepositoryImplTest {
     @get:Rule
     var mainCoroutineRule = MainCoroutineRule()
 
-    private val mockWebServer = MockWebServer()
+    @RelaxedMockK
+    private lateinit var mockData: CharactersListQuery.Data
 
-    private lateinit var mockApi: ApolloClient
-
+    @RelaxedMockK
     private lateinit var objectUnderTest: CharacterRepository
+
 
     @Before
     fun setUp() {
-        mockWebServer.start(8080)
-
-        mockApi = ApolloClient.builder()
-            .serverUrl(mockWebServer.url("/"))
-            .build()
-
-        objectUnderTest = CharacterRepositoryImpl(mockApi)
-    }
-
-    @After
-    fun tearDown() {
-        mockWebServer.shutdown()
+        MockKAnnotations.init(this)
     }
 
     @Test
-    fun `given response failure when fetching results then return exception`() {
-        mockWebServer.apply {
-            enqueue(MockResponse().setResponseCode(GENERAL_ERROR_CODE))
-        }
+    fun `given expected success response check if true`() {
+        val expectedSuccess = ViewState.Success(mockData)
 
         runBlocking {
-            val apiResponse = objectUnderTest.queryCharactersList()
-
-            assertNotNull(apiResponse)
-            val expectedValue = ViewState.Error(Exception(SOMETHING_WRONG))
-            assertEquals(
-                expectedValue.exception.message,
-                (apiResponse as ViewState.Error).exception.message
-            )
-        }
-    }
-
-/*    @Test
-    fun testTeachersAreDisplayed() {
-        val reader = ResponseFileReader("characters_list_success.json")
-        val gson = Gson()
-        val expected: CharactersListQuery.Data =
-            gson.fromJson(reader.content, CharactersListQuery.Data::class.java)
-
-        mockWebServer.apply {
-            enqueue(MockResponse().setBody(SUCCESS_RESPONSE))
-        }
-
-        runBlocking {
-
-            val mockData = mockk<ApolloQueryCall<CharactersListQuery.Data>>()
-
-            mockkObject(RickAndMortyApi)
-
-            val mockApi = mockk<ApolloClient>()
-
-            every { RickAndMortyApi.getApolloClient() } returns mockApi
-
-            coEvery { mockApi.query(CharactersListQuery())} returns mockData
+            coEvery { objectUnderTest.queryCharactersList() }.returns(ViewState.Success(mockData))
 
             val actual: ViewState<CharactersListQuery.Data>? = objectUnderTest.queryCharactersList()
-            //val actualResult = posts?.extractData
 
-            coEvery { objectUnderTest.queryCharactersList() }
+            coVerify { objectUnderTest.queryCharactersList() }
 
-            assertEquals(expected, actual)
-        }
-    }*/
-
-    @Test
-    fun `given list of posts check for equality`() {
-        val reader = ResponseFileReader("characters_list_success.json")
-        val gson = Gson()
-        val expected: CharactersListQuery.Data =
-            gson.fromJson(reader.content, CharactersListQuery.Data::class.java)
-
-        mockWebServer.apply {
-            enqueue(MockResponse().setBody(ResponseFileReader("characters_list_success.json").content))
-        }
-
-        runBlocking {
-
-            coEvery { objectUnderTest.queryCharactersList() } returns ViewState.Success(expected)
-
-            val posts: ViewState<CharactersListQuery.Data>? = objectUnderTest.queryCharactersList()
-            val actualResult = posts?.extractData
-
-            assertEquals(expected, posts)
+            assertEquals(expectedSuccess, actual)
         }
     }
 
