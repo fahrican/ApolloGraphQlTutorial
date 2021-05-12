@@ -33,13 +33,13 @@ class CharacterRepositoryImplTest {
         val expectedSuccess = ViewState.Success(mockData)
 
         runBlocking {
-            coEvery { objectUnderTest.queryCharactersList() }.returns(ViewState.Success(mockData))
+            coEvery { objectUnderTest.queryCharactersList() } returns ViewState.Success(mockData)
 
-            val actual: ViewState<CharactersListQuery.Data>? = objectUnderTest.queryCharactersList()
+            val actualResult = objectUnderTest.queryCharactersList()
 
             coVerify { objectUnderTest.queryCharactersList() }
 
-            assertEquals(expectedSuccess, actual)
+            assertEquals(expectedSuccess, actualResult)
         }
     }
 
