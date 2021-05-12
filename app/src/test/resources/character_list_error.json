@@ -1,0 +1,16 @@
+{
+  "errors": [
+    {
+      "message": "Cannot query field \"specie\" on type \"Character\". Did you mean \"species\"?",
+      "locations": [
+        {
+          "line": 6,
+          "column": 13
+        }
+      ],
+      "extensions": {
+        "code": "GRAPHQL_VALIDATION_FAILED"
+      }
+    }
+  ]
+}

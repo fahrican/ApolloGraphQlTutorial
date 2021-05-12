@@ -1,5 +1,6 @@
 package com.example.apollographqltutorial.repository
 
+import com.apollographql.apollo.ApolloClient
 import com.example.apollographqltutorial.CharactersListQuery
 import com.example.apollographqltutorial.repository.BaseRepository.Companion.SOMETHING_WRONG
 import com.example.apollographqltutorial.view.state.ViewState
@@ -20,6 +21,7 @@ class CharacterRepositoryImplTest {
     @RelaxedMockK
     private lateinit var mockData: CharactersListQuery.Data
 
+
     @RelaxedMockK
     private lateinit var objectUnderTest: CharacterRepository
 
@@ -27,6 +29,8 @@ class CharacterRepositoryImplTest {
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
+
+        //objectUnderTest = CharacterRepositoryImpl(mockApolloClient)
     }
 
     @Test
