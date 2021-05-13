@@ -5,8 +5,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.apollographql.apollo.api.Response
-import com.apollographql.apollo.exception.ApolloException
 import com.example.apollographqltutorial.CharacterQuery
 import com.example.apollographqltutorial.CharactersListQuery
 import com.example.apollographqltutorial.repository.CharacterRepository
@@ -27,8 +25,8 @@ class CharacterViewModel @Inject constructor(
     val charactersList: LiveData<ViewState<CharactersListQuery.Data>>
         get() = _charactersList
 
-    private val _character by lazy { MutableLiveData<ViewState<Response<CharacterQuery.Data>>>() }
-    val character: LiveData<ViewState<Response<CharacterQuery.Data>>>
+    private val _character by lazy { MutableLiveData<ViewState<CharacterQuery.Data>>() }
+    val character: LiveData<ViewState<CharacterQuery.Data>>
         get() = _character
 
     fun queryCharactersList() {
@@ -47,18 +45,25 @@ class CharacterViewModel @Inject constructor(
                     }
                 }
             }
-
         }
     }
 
-    fun queryCharacter(id: String) = viewModelScope.launch {
+    fun queryCharacter(id: String) {
         _character.postValue(ViewState.Loading)
-        try {
+        viewModelScope.launch {
             val response = repository.queryCharacter(id)
-            _character.postValue(ViewState.Success(response))
-        } catch (ae: ApolloException) {
-            Log.d("ApolloException", "Failure", ae)
-            _character.postValue(ViewState.Error(ApolloException("queryCharacter()")))
+            response.let { data ->
+                when (data) {
+                    is ViewState.Success -> {
+                        _character.postValue(data)
+                        Log.d("queryCharacter(id)", "response: $data")
+                    }
+                    else -> {
+                        _character.postValue(data)
+                        Log.e("queryCharacter(id)", "catch block")
+                    }
+                }
+            }
         }
     }
 

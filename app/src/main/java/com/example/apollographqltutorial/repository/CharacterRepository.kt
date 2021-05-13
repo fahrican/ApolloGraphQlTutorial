@@ -9,6 +9,6 @@ interface CharacterRepository {
 
     suspend fun queryCharactersList(): ViewState<CharactersListQuery.Data>?
 
-    suspend fun queryCharacter(id: String): Response<CharacterQuery.Data>
+    suspend fun queryCharacter(id: String): ViewState<CharacterQuery.Data>?
 
 }

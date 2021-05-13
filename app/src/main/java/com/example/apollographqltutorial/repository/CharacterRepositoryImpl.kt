@@ -2,7 +2,6 @@ package com.example.apollographqltutorial.repository
 
 import android.util.Log
 import com.apollographql.apollo.ApolloClient
-import com.apollographql.apollo.api.Response
 import com.apollographql.apollo.coroutines.await
 import com.apollographql.apollo.exception.ApolloException
 import com.example.apollographqltutorial.CharacterQuery
@@ -28,7 +27,17 @@ class CharacterRepositoryImpl @Inject constructor(
         return result
     }
 
-    override suspend fun queryCharacter(id: String): Response<CharacterQuery.Data> {
-        return webService.query(CharacterQuery(id)).await()
+    override suspend fun queryCharacter(id: String): ViewState<CharacterQuery.Data>? {
+        var result: ViewState<CharacterQuery.Data>? = null
+        try {
+            val response = webService.query(CharacterQuery(id)).await()
+            response.let {
+                it.data?.let { data -> result = handleSuccess(data) }
+            }
+        } catch (ae: ApolloException) {
+            Log.e("CharacterRepositoryImpl", "Error: ${ae.message}")
+            return handleException(GENERAL_ERROR_CODE)
+        }
+        return result
     }
 }
