@@ -3,9 +3,9 @@ package com.example.apollographqltutorial.repository
 import com.apollographql.apollo.ApolloClient
 import com.example.apollographqltutorial.CharactersListQuery
 import com.example.apollographqltutorial.repository.BaseRepository.Companion.SOMETHING_WRONG
-import com.example.apollographqltutorial.util.ResponseFileReader
 import com.example.apollographqltutorial.view.state.ViewState
-import com.google.gson.Gson
+import io.mockk.MockKAnnotations
+import io.mockk.impl.annotations.RelaxedMockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import okhttp3.mockwebserver.MockWebServer
@@ -21,11 +21,16 @@ import org.junit.runners.JUnit4
 @RunWith(JUnit4::class)
 class CharacterRepositoryImplTest {
 
+    @RelaxedMockK
+    private lateinit var mockData: CharactersListQuery.Data
+
     private val mockWebServer = MockWebServer()
 
 
     @Before
     fun setUp() {
+        MockKAnnotations.init(this)
+
         mockWebServer.start(8080)
     }
 
@@ -59,12 +64,7 @@ class CharacterRepositoryImplTest {
 
         val objectUnderTest = CharacterRepositoryImpl(apolloClientNoUrl)
 
-        val reader = ResponseFileReader("characters_list_success.json")
-        val gson = Gson()
-        val data: CharactersListQuery.Data =
-            gson.fromJson(reader.content, CharactersListQuery.Data::class.java)
-
-        val expectedSuccess = ViewState.Success(data)
+        val expectedSuccess = ViewState.Success(mockData)
 
         runBlocking {
             val actualResult = objectUnderTest.queryCharactersList()
