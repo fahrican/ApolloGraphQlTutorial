@@ -1,6 +1,5 @@
 package com.example.apollographqltutorial.repository
 
-import com.apollographql.apollo.api.Response
 import com.example.apollographqltutorial.CharacterQuery
 import com.example.apollographqltutorial.CharactersListQuery
 import com.example.apollographqltutorial.view.state.ViewState

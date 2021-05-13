@@ -40,7 +40,7 @@ class CharacterRepositoryImplTest {
     }
 
     @Test
-    fun `given response failure when fetching results then return exception`() {
+    fun `given response failure of list when fetching results then return exception`() {
         val apolloClientNoUrl = ApolloClient.builder()
             .serverUrl(mockWebServer.url("/"))
             .build()
@@ -68,6 +68,40 @@ class CharacterRepositoryImplTest {
 
         runBlocking {
             val actualResult = objectUnderTest.queryCharactersList()
+
+            assertEquals(expectedSuccess::class.java, actualResult!!::class.java)
+        }
+    }
+
+    @Test
+    fun `given response failure for specific character when fetching results then return exception`() {
+        val apolloClientNoUrl = ApolloClient.builder()
+            .serverUrl(mockWebServer.url("/"))
+            .build()
+
+        val objectUnderTest = CharacterRepositoryImpl(apolloClientNoUrl)
+
+        val expectedError = ViewState.Error(Exception(SOMETHING_WRONG))
+
+        runBlocking {
+            val actualResult = objectUnderTest.queryCharacter("14")
+
+            assertEquals(expectedError::class.java, actualResult!!::class.java)
+        }
+    }
+
+    @Test
+    fun `given response specific character when fetching results then return success`() {
+        val apolloClientNoUrl = ApolloClient.builder()
+            .serverUrl(mockWebServer.url("https://rickandmortyapi.com/graphql"))
+            .build()
+
+        val objectUnderTest = CharacterRepositoryImpl(apolloClientNoUrl)
+
+        val expectedSuccess = ViewState.Success(mockData)
+
+        runBlocking {
+            val actualResult = objectUnderTest.queryCharacter("14")
 
             assertEquals(expectedSuccess::class.java, actualResult!!::class.java)
         }
