@@ -2,14 +2,17 @@ package com.example.apollographqltutorial.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
+import com.apollographql.apollo.exception.ApolloException
 import com.example.apollographqltutorial.CharactersListQuery
 import com.example.apollographqltutorial.MainCoroutineRule
 import com.example.apollographqltutorial.repository.CharacterRepository
 import com.example.apollographqltutorial.view.state.ViewState
+import io.mockk.mockk
+import junit.framework.Assert.assertEquals
+import junit.framework.Assert.assertNotNull
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.After
-import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -18,6 +21,7 @@ import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 import org.mockito.Mock
 import org.mockito.Mockito
+import org.mockito.Mockito.mock
 import org.mockito.MockitoAnnotations
 
 
@@ -39,6 +43,7 @@ class CharacterViewModelTest {
 
     private lateinit var objectUnderTest: CharacterViewModel
 
+
     @Before
     fun setUp() {
         MockitoAnnotations.initMocks(this)
@@ -51,26 +56,6 @@ class CharacterViewModelTest {
         objectUnderTest.charactersList.removeObserver(responseObserver)
     }
 
-/*
-    @Test
-    fun `given loading state confirm it happens`() {
-        coEvery { mockRepository.queryCharactersList() } returns ViewState.Loading
-
-        val objectUnderTest = CharacterViewModel(mockRepository)
-
-        val observer = mockk<Observer<ViewState.Loading>>(relaxUnitFun = true)
-
-        //objectUnderTest.charactersList.observeForever { ViewState.Loading }
-
-        objectUnderTest.queryCharactersList()
-
-        coVerify { observer.onChanged(ViewState.Loading) }
-
-        confirmVerified(observer)
-    }
-*/
-
-
     @Test
     fun `when calling for results then return loading`() {
         testCoroutineRule.runBlockingTest {
@@ -82,5 +67,39 @@ class CharacterViewModelTest {
         }
     }
 
+    @Test
+    fun `when fetching results fails then return an error`() {
+        val exception = mock(ApolloException::class.java)
+        testCoroutineRule.runBlockingTest {
+            objectUnderTest.charactersList.observeForever(responseObserver)
+
+            Mockito.`when`(mockRepository.queryCharactersList()).thenAnswer {
+                ViewState.Error(exception)
+            }
+
+            objectUnderTest.queryCharactersList()
+
+            assertNotNull(objectUnderTest.charactersList.value)
+            assertEquals(ViewState.Error(exception), objectUnderTest.charactersList.value)
+        }
+    }
+
+    @Test
+    fun `when fetching results ok then return a list successfully`() {
+        val mockCharacters = mockk<CharactersListQuery.Data>()
+
+        testCoroutineRule.runBlockingTest {
+            objectUnderTest.charactersList.observeForever(responseObserver)
+
+            Mockito.`when`(mockRepository.queryCharactersList()).thenAnswer {
+                ViewState.Success(mockCharacters)
+            }
+
+            objectUnderTest.queryCharactersList()
+
+            assertNotNull(objectUnderTest.charactersList.value)
+            assertEquals(ViewState.Success(mockCharacters), objectUnderTest.charactersList.value)
+        }
+    }
 
 }
