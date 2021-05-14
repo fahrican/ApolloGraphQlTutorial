@@ -6,10 +6,4 @@ sealed class ViewState<out T : Any> {
     data class Error(val exception: Exception) : ViewState<Nothing>()
     object Loading : ViewState<Nothing>()
 
-    val extractData: T?
-        get() = when (this) {
-            is Success -> result
-            is Error -> null
-            is Loading -> null
-        }
 }
