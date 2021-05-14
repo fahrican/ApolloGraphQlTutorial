@@ -57,7 +57,7 @@ class CharacterViewModelTest {
     }
 
     @Test
-    fun `when calling for results then return loading`() {
+    fun `when calling for characters list then return loading`() {
         testCoroutineRule.runBlockingTest {
             objectUnderTest.charactersList.observeForever(responseObserver)
 
@@ -68,7 +68,7 @@ class CharacterViewModelTest {
     }
 
     @Test
-    fun `when fetching results fails then return an error`() {
+    fun `when fetching for characters list fails then return an error`() {
         val exception = mock(ApolloException::class.java)
         testCoroutineRule.runBlockingTest {
             objectUnderTest.charactersList.observeForever(responseObserver)
@@ -85,7 +85,7 @@ class CharacterViewModelTest {
     }
 
     @Test
-    fun `when fetching results ok then return a list successfully`() {
+    fun `when fetching for characters list then return a list success state`() {
         val mockCharacters = mockk<CharactersListQuery.Data>()
 
         testCoroutineRule.runBlockingTest {
