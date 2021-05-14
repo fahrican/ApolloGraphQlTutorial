@@ -120,15 +120,15 @@ class CharacterViewModelTest {
 
     @Test
     fun `when calling for a specific character fails then return an error`() {
-        val exception = mockk<ApolloException>()
+        val exception = mock(ApolloException::class.java)
         testCoroutineRule.runBlockingTest {
             objectUnderTest.character.observeForever(characterObserver)
 
-            Mockito.`when`(objectUnderTest.queryCharacter("154")).thenAnswer {
+            Mockito.`when`(mockRepository.queryCharacter("099")).thenAnswer {
                 ViewState.Error(exception)
             }
 
-            objectUnderTest.queryCharacter("154")
+            objectUnderTest.queryCharacter("099")
 
             assertNotNull(objectUnderTest.character.value)
             assertEquals(ViewState.Error(exception), objectUnderTest.character.value)
