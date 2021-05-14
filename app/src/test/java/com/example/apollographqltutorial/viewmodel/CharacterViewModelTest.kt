@@ -3,6 +3,7 @@ package com.example.apollographqltutorial.viewmodel
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.apollographql.apollo.exception.ApolloException
+import com.example.apollographqltutorial.CharacterQuery
 import com.example.apollographqltutorial.CharactersListQuery
 import com.example.apollographqltutorial.MainCoroutineRule
 import com.example.apollographqltutorial.repository.CharacterRepository
@@ -39,7 +40,10 @@ class CharacterViewModelTest {
     private lateinit var mockRepository: CharacterRepository
 
     @Mock
-    private lateinit var responseObserver: Observer<ViewState<CharactersListQuery.Data>>
+    private lateinit var charactersListObserver: Observer<ViewState<CharactersListQuery.Data>>
+
+    @Mock
+    private lateinit var characterObserver: Observer<ViewState<CharacterQuery.Data>>
 
     private lateinit var objectUnderTest: CharacterViewModel
 
@@ -53,17 +57,18 @@ class CharacterViewModelTest {
 
     @After
     fun tearDown() {
-        objectUnderTest.charactersList.removeObserver(responseObserver)
+        objectUnderTest.charactersList.removeObserver(charactersListObserver)
+        objectUnderTest.character.removeObserver(characterObserver)
     }
 
     @Test
     fun `when calling for characters list then return loading`() {
         testCoroutineRule.runBlockingTest {
-            objectUnderTest.charactersList.observeForever(responseObserver)
+            objectUnderTest.charactersList.observeForever(charactersListObserver)
 
             objectUnderTest.queryCharactersList()
 
-            Mockito.verify(responseObserver).onChanged(ViewState.Loading)
+            Mockito.verify(charactersListObserver).onChanged(ViewState.Loading)
         }
     }
 
@@ -71,7 +76,7 @@ class CharacterViewModelTest {
     fun `when fetching for characters list fails then return an error`() {
         val exception = mock(ApolloException::class.java)
         testCoroutineRule.runBlockingTest {
-            objectUnderTest.charactersList.observeForever(responseObserver)
+            objectUnderTest.charactersList.observeForever(charactersListObserver)
 
             Mockito.`when`(mockRepository.queryCharactersList()).thenAnswer {
                 ViewState.Error(exception)
@@ -89,7 +94,7 @@ class CharacterViewModelTest {
         val mockCharacters = mockk<CharactersListQuery.Data>()
 
         testCoroutineRule.runBlockingTest {
-            objectUnderTest.charactersList.observeForever(responseObserver)
+            objectUnderTest.charactersList.observeForever(charactersListObserver)
 
             Mockito.`when`(mockRepository.queryCharactersList()).thenAnswer {
                 ViewState.Success(mockCharacters)
@@ -102,4 +107,50 @@ class CharacterViewModelTest {
         }
     }
 
+    @Test
+    fun `when calling for a specific character then return loading`() {
+        testCoroutineRule.runBlockingTest {
+            objectUnderTest.character.observeForever(characterObserver)
+
+            objectUnderTest.queryCharacter("14")
+
+            Mockito.verify(characterObserver).onChanged(ViewState.Loading)
+        }
+    }
+
+    @Test
+    fun `when calling for a specific character fails then return an error`() {
+        val exception = mockk<ApolloException>()
+        testCoroutineRule.runBlockingTest {
+            objectUnderTest.character.observeForever(characterObserver)
+
+            Mockito.`when`(objectUnderTest.queryCharacter("154")).thenAnswer {
+                ViewState.Error(exception)
+            }
+
+            objectUnderTest.queryCharacter("154")
+
+            assertNotNull(objectUnderTest.character.value)
+            assertEquals(ViewState.Error(exception), objectUnderTest.character.value)
+        }
+    }
+
+
+    @Test
+    fun `when fetching for a specific character then return a list success state`() {
+        val mockCharacters = mockk<CharacterQuery.Data>()
+
+        testCoroutineRule.runBlockingTest {
+            objectUnderTest.character.observeForever(characterObserver)
+
+            Mockito.`when`(mockRepository.queryCharacter("14")).thenAnswer {
+                ViewState.Success(mockCharacters)
+            }
+
+            objectUnderTest.queryCharacter("14")
+
+            assertNotNull(objectUnderTest.character.value)
+            assertEquals(ViewState.Success(mockCharacters), objectUnderTest.character.value)
+        }
+    }
 }

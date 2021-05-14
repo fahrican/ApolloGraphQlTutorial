@@ -58,6 +58,10 @@ class CharacterViewModel @Inject constructor(
                         _character.postValue(data)
                         Log.d("queryCharacter(id)", "response: $data")
                     }
+                    is ViewState.Error -> {
+                        _character.postValue(data)
+                        Log.e("queryCharacter(id)", "error block")
+                    }
                     else -> {
                         _character.postValue(data)
                         Log.e("queryCharacter(id)", "catch block")
