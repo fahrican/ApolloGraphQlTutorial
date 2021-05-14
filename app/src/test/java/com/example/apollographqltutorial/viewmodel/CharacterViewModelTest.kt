@@ -22,7 +22,6 @@ import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 import org.mockito.Mock
 import org.mockito.Mockito
-import org.mockito.Mockito.mock
 import org.mockito.MockitoAnnotations
 
 
@@ -74,7 +73,7 @@ class CharacterViewModelTest {
 
     @Test
     fun `when fetching for characters list fails then return an error`() {
-        val exception = mock(ApolloException::class.java)
+        val exception = mockk<ApolloException>()
         testCoroutineRule.runBlockingTest {
             objectUnderTest.charactersList.observeForever(charactersListObserver)
 
@@ -120,7 +119,7 @@ class CharacterViewModelTest {
 
     @Test
     fun `when calling for a specific character fails then return an error`() {
-        val exception = mock(ApolloException::class.java)
+        val exception = mockk<ApolloException>()
         testCoroutineRule.runBlockingTest {
             objectUnderTest.character.observeForever(characterObserver)
 
