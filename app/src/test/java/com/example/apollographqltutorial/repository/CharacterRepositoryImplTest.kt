@@ -1,12 +1,15 @@
 package com.example.apollographqltutorial.repository
 
 import com.apollographql.apollo.ApolloClient
+import com.apollographql.apollo.Logger
 import com.example.apollographqltutorial.CharactersListQuery
+import com.example.apollographqltutorial.Utils
+import io.mockk.MockKAnnotations
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import okhttp3.OkHttpClient
 import com.example.apollographqltutorial.repository.BaseRepository.Companion.SOMETHING_WRONG
 import com.example.apollographqltutorial.view.state.ViewState
-import io.mockk.MockKAnnotations
 import io.mockk.impl.annotations.RelaxedMockK
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.After
@@ -15,6 +18,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
+import okhttp3.Dispatcher
 
 
 @ExperimentalCoroutinesApi
@@ -26,12 +30,32 @@ class CharacterRepositoryImplTest {
 
     private val mockWebServer = MockWebServer()
 
+    private lateinit var apolloClient: ApolloClient
+
+    private lateinit var objectUnderTest: CharacterRepository
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
 
         mockWebServer.start(8080)
+
+        val okHttpClient = OkHttpClient.Builder()
+            .dispatcher(Dispatcher(Utils.immediateExecutorService()))
+            .build()
+
+        apolloClient = ApolloClient.builder()
+            .serverUrl(mockWebServer.url("/"))
+            .dispatcher(Utils.immediateExecutor())
+            .okHttpClient(okHttpClient)
+            .logger(object : Logger {
+                override fun log(priority: Int, message: String, t: Throwable?, vararg args: Any) {
+                    println(String.format(message, *args))
+                    t?.printStackTrace()
+                }
+            }).build()
+
+        objectUnderTest = CharacterRepositoryImpl(apolloClient)
     }
 
     @After
@@ -58,11 +82,7 @@ class CharacterRepositoryImplTest {
 
     @Test
     fun `given response characters list when fetching results then return success`() {
-        val apolloClientNoUrl = ApolloClient.builder()
-            .serverUrl(mockWebServer.url("https://rickandmortyapi.com/graphql"))
-            .build()
-
-        val objectUnderTest = CharacterRepositoryImpl(apolloClientNoUrl)
+        mockWebServer.enqueue(Utils.mockResponse("characters_list_success.json"))
 
         val expectedSuccess = ViewState.Success(mockData)
 
