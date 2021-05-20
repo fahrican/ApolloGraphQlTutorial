@@ -1,0 +1,15 @@
+{
+  "data": {
+    "__typename": "Character",
+    "character": {
+      "__typename": "Character",
+      "id": "14",
+      "name": "Alien Morty",
+      "status": "unknown",
+      "species": "Alien",
+      "type": "",
+      "gender": "Male",
+      "image": "https://rickandmortyapi.com/api/character/avatar/14.jpeg"
+    }
+  }
+}

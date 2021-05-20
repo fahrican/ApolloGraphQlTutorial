@@ -65,12 +65,6 @@ class CharacterRepositoryImplTest {
 
     @Test
     fun `given response failure of list when fetching results then return exception`() {
-        val apolloClientNoUrl = ApolloClient.builder()
-            .serverUrl(mockWebServer.url("/"))
-            .build()
-
-        val objectUnderTest = CharacterRepositoryImpl(apolloClientNoUrl)
-
         val expectedError = ViewState.Error(Exception(SOMETHING_WRONG))
 
         runBlocking {
@@ -95,12 +89,6 @@ class CharacterRepositoryImplTest {
 
     @Test
     fun `given response failure for specific character when fetching results then return exception`() {
-        val apolloClientNoUrl = ApolloClient.builder()
-            .serverUrl(mockWebServer.url("/"))
-            .build()
-
-        val objectUnderTest = CharacterRepositoryImpl(apolloClientNoUrl)
-
         val expectedError = ViewState.Error(Exception(SOMETHING_WRONG))
 
         runBlocking {
@@ -112,11 +100,7 @@ class CharacterRepositoryImplTest {
 
     @Test
     fun `given response specific character when fetching results then return success`() {
-        val apolloClientNoUrl = ApolloClient.builder()
-            .serverUrl(mockWebServer.url("https://rickandmortyapi.com/graphql"))
-            .build()
-
-        val objectUnderTest = CharacterRepositoryImpl(apolloClientNoUrl)
+        mockWebServer.enqueue(Utils.mockResponse("specific_character_response.json"))
 
         val expectedSuccess = ViewState.Success(mockData)
 
