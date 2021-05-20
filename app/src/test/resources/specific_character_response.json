@@ -1,6 +1,6 @@
 {
   "data": {
-    "__typename": "Character",
+    "__typename": "TypeCharacter",
     "character": {
       "__typename": "Character",
       "id": "14",

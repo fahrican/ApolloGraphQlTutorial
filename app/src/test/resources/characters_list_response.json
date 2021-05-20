@@ -1,7 +1,7 @@
 {
   "data": {
     "characters": {
-      "__typename": "CharacterList",
+      "__typename": "Characters",
       "results": [
         {
           "__typename": "Character",

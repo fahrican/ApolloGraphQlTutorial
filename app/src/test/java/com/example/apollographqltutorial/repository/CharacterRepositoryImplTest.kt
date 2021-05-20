@@ -76,7 +76,7 @@ class CharacterRepositoryImplTest {
 
     @Test
     fun `given response characters list when fetching results then return success`() {
-        mockWebServer.enqueue(Utils.mockResponse("characters_list_success.json"))
+        mockWebServer.enqueue(Utils.mockResponse("characters_list_response.json"))
 
         val expectedSuccess = ViewState.Success(mockData)
 
