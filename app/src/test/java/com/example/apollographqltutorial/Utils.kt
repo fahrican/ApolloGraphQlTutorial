@@ -7,7 +7,6 @@ import java.io.InputStreamReader
 import java.nio.charset.Charset
 import java.util.concurrent.AbstractExecutorService
 import java.util.concurrent.Executor
-import java.util.concurrent.ExecutorService
 import java.util.concurrent.TimeUnit
 
 object Utils {
@@ -16,45 +15,33 @@ object Utils {
     fun readFileToString(
         contextClass: Class<*>,
         streamIdentifier: String
-    ): String {
-
-        var inputStreamReader: InputStreamReader? = null
-        try {
-            inputStreamReader = InputStreamReader(
-                contextClass.getResourceAsStream(streamIdentifier),
-                Charset.defaultCharset()
-            )
-            return CharStreams.toString(inputStreamReader)
-        } catch (e: IOException) {
-            throw IOException()
-        } finally {
-            inputStreamReader?.close()
-        }
+    ): String = InputStreamReader(
+        contextClass.getResourceAsStream(streamIdentifier),
+        Charset.defaultCharset()
+    ).use {
+        CharStreams.toString(it)
     }
 
-    fun immediateExecutor(): Executor {
-        return Executor { command -> command.run() }
-    }
+    fun immediateExecutor() = Executor { command -> command.run() }
 
     @Throws(IOException::class)
-    fun mockResponse(fileName: String): MockResponse {
-        return MockResponse().setChunkedBody(readFileToString(Utils::class.java, "/$fileName"), 32)
-    }
+    fun mockResponse(fileName: String) =
+        MockResponse().setChunkedBody(
+            readFileToString(Utils::class.java, "/$fileName"), 32
+        )
 
-    fun immediateExecutorService(): ExecutorService {
-        return object : AbstractExecutorService() {
-            override fun shutdown() = Unit
+    fun immediateExecutorService() = object : AbstractExecutorService() {
+        override fun shutdown() = Unit
 
-            override fun shutdownNow(): List<Runnable>? = null
+        override fun shutdownNow(): List<Runnable>? = null
 
-            override fun isShutdown(): Boolean = false
+        override fun isShutdown() = false
 
-            override fun isTerminated(): Boolean = false
+        override fun isTerminated() = false
 
-            @Throws(InterruptedException::class)
-            override fun awaitTermination(l: Long, timeUnit: TimeUnit): Boolean = false
+        @Throws(InterruptedException::class)
+        override fun awaitTermination(l: Long, timeUnit: TimeUnit) = false
 
-            override fun execute(runnable: Runnable) = runnable.run()
-        }
+        override fun execute(runnable: Runnable) = runnable.run()
     }
 }
