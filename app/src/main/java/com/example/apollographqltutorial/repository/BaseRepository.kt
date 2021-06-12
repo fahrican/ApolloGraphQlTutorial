@@ -3,7 +3,7 @@ package com.example.apollographqltutorial.repository
 import com.example.apollographqltutorial.view.state.ViewState
 
 
-abstract class BaseRepository : CharacterRepository {
+abstract class BaseRepository {
 
     companion object {
         const val GENERAL_ERROR_CODE = 499

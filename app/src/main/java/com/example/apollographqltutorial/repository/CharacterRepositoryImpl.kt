@@ -11,7 +11,7 @@ import javax.inject.Inject
 
 class CharacterRepositoryImpl @Inject constructor(
     private val webService: ApolloClient
-) : BaseRepository() {
+) : BaseRepository(), CharacterRepository {
 
     override suspend fun queryCharactersList(): ViewState<CharactersListQuery.Data>? {
         var result: ViewState<CharactersListQuery.Data>? = null
